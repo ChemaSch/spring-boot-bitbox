@@ -1,7 +1,7 @@
 package com.bitbox.service;
 
 import com.bitbox.model.Supplier;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -10,14 +10,14 @@ import java.util.List;
  */
 public interface SupplierService {
     
-    public List<Supplier> getSuppliers();
+    public ResponseEntity<?> getSuppliers();
     
-    public Supplier getSupplier(Long id);
+    public ResponseEntity<?> getSupplier(Long id);
     
-    public Supplier saveSupplier(Supplier supplier);
+    public ResponseEntity<?> saveSupplier(Supplier supplier);
     
-    public Supplier updateSupplier(Supplier supplier);
+    public ResponseEntity<?> updateSupplier(Supplier supplier, Long id);
     
-    public void deleteSupplier(Long id);
+    public ResponseEntity<?> deleteSupplier(Long id);
     
 }

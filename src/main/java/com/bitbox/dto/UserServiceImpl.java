@@ -28,27 +28,29 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUsers() {
-        List<User> users = (List<User>) user.findAll();
-        
-        if (users == null) {
+        List<User> usersDB = (List<User>) user.findAll();
+
+        if (usersDB.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else
-            return new ResponseEntity<>(users, HttpStatus.OK);        
+        } else {
+            return new ResponseEntity<>(usersDB, HttpStatus.OK);
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getUser(Long id) {        
+    public ResponseEntity<?> getUser(Long id) {
         Optional<User> userDB = this.user.findById(id);
-        
+
         if (userDB.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(userDB, HttpStatus.OK);
         }
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> saveUser(User user) {
         // Encode the password of the user.
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -59,16 +61,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ResponseEntity<?> updateUser(User user, Long id) {
         Optional<User> userDB = this.user.findById(id);
-        
-        if(userDB.isEmpty()) {
+
+        if (userDB.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             userDB.get().setName(user.getName());
             userDB.get().setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userDB.get().setRole(user.getRole());
-            return new ResponseEntity<>(userDB.get(), HttpStatus.OK);
+            return new ResponseEntity<>(this.user.save(userDB.get()), HttpStatus.OK);
         }
-        
     }
 
     @Override
@@ -76,36 +77,36 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> deleteUser(Long id) {
         return this.user.findById(id)
                 .map((userDB) -> {
-                    this.user.delete(userDB);                    
+                    this.user.delete(userDB);
                     return new ResponseEntity<>(HttpStatus.OK);
-                }).orElseGet( () -> {                    
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }).orElseGet(() -> {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         });
     }
-   
+
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> login(User user) {        
+    public ResponseEntity<?> login(User user) {
         User userDB = this.user.findByName(user.getName());
-                
-        if(userDB == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if (userDB == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        
+
         if (comparePassword(user.getPassword(), userDB.getPassword())) {
             return new ResponseEntity<>(userDB, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-   
-    private boolean comparePassword(String password, String DBpassword){
+
+    private boolean comparePassword(String password, String DBpassword) {
         BCryptPasswordEncoder cryptPassword = new BCryptPasswordEncoder();
-        if(!cryptPassword.matches(password, DBpassword)) {            
+        if (!cryptPassword.matches(password, DBpassword)) {
             return false;
-        } else {            
+        } else {
             return true;
         }
-    } 
+    }
 
 }

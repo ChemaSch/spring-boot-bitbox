@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,17 +38,18 @@ public class Price_Reduction implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Basic(optional = false)
-    @NotNull    
+    @Basic(optional = true)
+    private String reduced_price;
+    
+    @Basic(optional = true)      
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date start_date;
     
-    @Basic(optional = false)
-    @NotNull    
+    @Basic(optional = true)    
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date end_date;
     
-    @ManyToMany(mappedBy = "price_reductions", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "price_reductions", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Item> items;
     
     // Constructors    
@@ -72,6 +74,14 @@ public class Price_Reduction implements Serializable {
         this.id = id;
     }
 
+    public String getReduced_price() {
+        return reduced_price;
+    }
+
+    public void setReduced_price(String reduced_price) {
+        this.reduced_price = reduced_price;
+    }
+    
     public Date getStart_date() {
         return start_date;
     }
@@ -115,7 +125,7 @@ public class Price_Reduction implements Serializable {
 
     @Override
     public String toString() {
-        return "Price_Reduction{" + "id=" + id + ", start_date=" + start_date + ", end_date=" + end_date + ", items=" + items + '}';
+        return "Price_Reduction{" + "id=" + id + ", reduced_price=" + reduced_price + ", start_date=" + start_date + ", end_date=" + end_date + ", items=" + items + '}';
     }
 
 }

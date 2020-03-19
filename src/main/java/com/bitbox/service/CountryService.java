@@ -1,7 +1,6 @@
 package com.bitbox.service;
 
-import com.bitbox.model.Country;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -10,8 +9,8 @@ import java.util.List;
  */
 public interface CountryService  {
     
-    public List<Country> getCountries();
+    public ResponseEntity<?> getCountries();
     
-    public Country getCountry(Long id);
+    public ResponseEntity<?> getCountry(Long id);
     
 }

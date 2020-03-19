@@ -1,7 +1,7 @@
 package com.bitbox.service;
 
 import com.bitbox.model.Item;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -10,14 +10,14 @@ import java.util.List;
  */
 public interface ItemService {
     
-    public List<Item> getItems();
+    public ResponseEntity<?> getItems();
     
-    public Item getItem(Long id);
+    public ResponseEntity<?> getItem(Long id);
     
-    public Item saveItem(Item item);
+    public ResponseEntity<?> saveItem(Item item);
     
-    public Item updateItem(Long id, Item item);
+    public ResponseEntity<?> updateItem(Item item, Long id);
     
-    public void deleteItem(Long id);
+    public ResponseEntity<?> deleteItem(Long id);
     
 }

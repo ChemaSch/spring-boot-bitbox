@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,7 +49,7 @@ public class Supplier implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Country country;
     
-    @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Item> items;
         
     // Constructors
