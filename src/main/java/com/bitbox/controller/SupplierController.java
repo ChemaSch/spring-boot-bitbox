@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,12 +42,12 @@ public class SupplierController {
     }
     
     @PostMapping(path = "/suppliers")
-    public ResponseEntity<?> saveSupplier(Supplier supplier) {
+    public ResponseEntity<?> saveSupplier(@RequestBody Supplier supplier) {
         return supplierService.saveSupplier(supplier);
     }
     
     @PutMapping(path = "/suppliers/{id}")
-    public ResponseEntity<?> updateSupplier(Supplier supplier, @PathVariable Long id) {
+    public ResponseEntity<?> updateSupplier(@RequestBody Supplier supplier, @PathVariable Long id) {
         return supplierService.updateSupplier(supplier, id);
     }
     

@@ -3,6 +3,7 @@ package com.bitbox.dto;
 import com.bitbox.dao.DAOItem;
 import com.bitbox.enums.Item_State;
 import com.bitbox.model.Item;
+import com.bitbox.model.Price_Reduction;
 import com.bitbox.model.Supplier;
 import com.bitbox.model.User;
 import com.bitbox.service.ItemService;
@@ -47,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
     public ResponseEntity<?> getItems() {
         List<Item> itemsDB = (List<Item>) item.findAll();
 
-        if (itemsDB == null) {
+        if (itemsDB.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(itemsDB, HttpStatus.OK);
@@ -75,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDate currentDate = LocalDate.now();
 
         item.setCreation_date(Date.valueOf(currentDate));
-        return new ResponseEntity<>(item, HttpStatus.CREATED);
+        return new ResponseEntity<>(this.item.save(item), HttpStatus.CREATED);
 
     }
 
@@ -95,21 +96,28 @@ public class ItemServiceImpl implements ItemService {
                 itemDB.get().setItem_state(item.getItem_state());
                 itemDB.get().setReason(item.getReason());
             }
+            
             // Check the price reduction list (just one price reduction) in the request. After, check if the price reduction exists on
             // the price reductions database list.
             if(!item.getPrice_reduction().isEmpty()) {
-                
+                for(int i = 0; i < itemDB.get().getPrice_reduction().size(); i++) {
+                    if( !existPriceReduction( itemDB.get().getPrice_reduction(), item.getPrice_reduction().get(0).getId() ) ) {
+                        
+                    }
+                }
             }
 
             // Check the suppliers list in the request. After, check if the supplier exists on the suppliers database list
-            // for avoid duplications insertions. In other case, add the supplier request to the suppliers databse list.
+            // for avoid duplications insertions. In other case, add the supplier request to the suppliers database list.
             if (!item.getSuppliers().isEmpty()) {
+                
                 for (int i = 0; i < item.getSuppliers().size(); i++) {
                     Supplier supplier = item.getSuppliers().get(i);
                     if (!existSupplier(itemDB.get().getSuppliers(), supplier.getId())) {
                         itemDB.get().addSupplier((Supplier) supplierService.getSupplier(item.getSuppliers().get(i).getId()).getBody());
                     }
                 }
+                
             }
             return new ResponseEntity<>(this.item.save(itemDB.get()), HttpStatus.OK);
         }
@@ -135,6 +143,13 @@ public class ItemServiceImpl implements ItemService {
         }
         return false;
     }
+    
+    private boolean existPriceReduction(List<Price_Reduction> price_reduction, Long id) {
+        if(price_reduction.stream().anyMatch( (p) -> (Objects.equals(p.getId(), id)))) {
+            return true;
+        }
+        return false;
+    }
 
     // Check if the item is active or not. Update the reason
     // of the item state if the value is equal to discontinued.
@@ -145,5 +160,5 @@ public class ItemServiceImpl implements ItemService {
             return false;
         }
     }
-        
+       
 }

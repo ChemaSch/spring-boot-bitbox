@@ -1,5 +1,7 @@
 package com.bitbox.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +49,11 @@ public class Supplier implements Serializable {
         
     @JoinColumn(name = "COUNTRY", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})    
     private Country country;
     
     @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Item> items;
         
     // Constructors

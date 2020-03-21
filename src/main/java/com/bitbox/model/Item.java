@@ -2,6 +2,7 @@ package com.bitbox.model;
 
 import com.bitbox.enums.Item_State;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -68,12 +69,14 @@ public class Item implements Serializable {
             joinColumns = @JoinColumn(name = "FK_item_code", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "FK_supplier", nullable = false))
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private List<Supplier> suppliers;
     
     @JoinTable(name = "REL_ITEM_PRICE_REDUCTION",
             joinColumns = @JoinColumn(name = "FK_item_code", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "FK_price_reduction", nullable = false))
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private List<Price_Reduction> price_reductions;
     
     @Basic(optional = true)    
@@ -82,6 +85,7 @@ public class Item implements Serializable {
     
     @JoinColumn(name = "creator", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User creator;
     
     // Constructors

@@ -44,12 +44,12 @@ public class UserController {
     }
    
     @PostMapping(path = "/users")    
-    public ResponseEntity<?> saveUser(User user) {
+    public ResponseEntity<?> saveUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
 
     @PutMapping(path = "/users/{id}")    
-    public ResponseEntity<?> updateUser(User user, @PathVariable Long id) {
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Long id) {
         return userService.updateUser(user, id);
     }
 

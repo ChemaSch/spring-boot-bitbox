@@ -35,7 +35,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (suppliersDB.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(suppliersDB, HttpStatus.OK);
         }
     }
 
@@ -54,7 +54,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     @Transactional
     public ResponseEntity<?> saveSupplier(Supplier supplier) {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(this.supplier.save(supplier), HttpStatus.OK);
     }
 
     @Override

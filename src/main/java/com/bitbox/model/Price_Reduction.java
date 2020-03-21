@@ -1,6 +1,7 @@
 package com.bitbox.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -50,6 +51,7 @@ public class Price_Reduction implements Serializable {
     private Date end_date;
     
     @ManyToMany(mappedBy = "price_reductions", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Item> items;
     
     // Constructors    
