@@ -3,6 +3,7 @@ package com.bitbox.model;
 import com.bitbox.enums.Item_State;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -34,6 +35,7 @@ import javax.persistence.Enumerated;
  */
 @Entity
 @Table(name = "ITEMS")
+@JsonPropertyOrder(value = {"code", "description", "price", "item_state", "reason", "suppliers", "price_reductions", "creation_date", "creator"})
 public class Item implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -41,7 +43,7 @@ public class Item implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull    
-    @Column(name = "code")
+    @Column(name = "code")   
     private Long item_code;
     
     @Basic(optional = false)
@@ -61,7 +63,7 @@ public class Item implements Serializable {
     private Item_State item_state;
     
     @Basic(optional = true)
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "reason_deactivation")
     private String reason;
     
@@ -76,10 +78,10 @@ public class Item implements Serializable {
             joinColumns = @JoinColumn(name = "FK_item_code", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "FK_price_reduction", nullable = false))
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})    
     private List<Price_Reduction> price_reductions;
     
-    @Basic(optional = true)    
+    @Basic(optional = true)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date creation_date;
     
@@ -99,7 +101,7 @@ public class Item implements Serializable {
         this.item_code = item_code;
         this.description = description;
         this.price = price;
-        this.item_state = Item_State.ACTIVE;        
+        this.item_state = item_state;        
         this.creator = creator;
     }
     
@@ -156,7 +158,7 @@ public class Item implements Serializable {
         this.suppliers.add(supplier);
     }
     
-    public List<Price_Reduction> getPrice_reduction() {
+    public List<Price_Reduction> getPrice_reductions() {
         return price_reductions;
     }
     

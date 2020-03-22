@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,12 +42,12 @@ public class ItemController {
     }
     
     @PostMapping(path = "/items")
-    public ResponseEntity<?> saveItem(Item item) {
+    public ResponseEntity<?> saveItem(@RequestBody Item item) {
         return itemService.saveItem(item);
     }
     
     @PutMapping(path = "/items/{id}")
-    public ResponseEntity<?> updateItem(Item item, @PathVariable Long id) {
+    public ResponseEntity<?> updateItem(@RequestBody Item item, @PathVariable Long id) {
         return itemService.updateItem(item, id);
     }
     

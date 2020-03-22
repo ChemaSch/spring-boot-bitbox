@@ -89,8 +89,7 @@ public class ItemServiceImpl implements ItemService {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {
             itemDB.get().setDescription(item.getDescription());
-            itemDB.get().setPrice(item.getPrice());
-            itemDB.get().setCreator((User) userService.getUser(item.getCreator().getId()).getBody());
+            itemDB.get().setPrice(item.getPrice());            
             
             if (isDiscontinued(item.getItem_state().toString())) {
                 itemDB.get().setItem_state(item.getItem_state());
@@ -99,13 +98,15 @@ public class ItemServiceImpl implements ItemService {
             
             // Check the price reduction list (just one price reduction) in the request. After, check if the price reduction exists on
             // the price reductions database list.
-            if(!item.getPrice_reduction().isEmpty()) {
-                for(int i = 0; i < itemDB.get().getPrice_reduction().size(); i++) {
-                    if( !existPriceReduction( itemDB.get().getPrice_reduction(), item.getPrice_reduction().get(0).getId() ) ) {
+            
+            if(!item.getPrice_reductions().isEmpty()) {
+                for(int i = 0; i < itemDB.get().getPrice_reductions().size(); i++) {
+                    if( !existPriceReduction( itemDB.get().getPrice_reductions(), item.getPrice_reductions().get(0).getId() ) ) {
                         
                     }
                 }
             }
+            
 
             // Check the suppliers list in the request. After, check if the supplier exists on the suppliers database list
             // for avoid duplications insertions. In other case, add the supplier request to the suppliers database list.

@@ -61,12 +61,12 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     public ResponseEntity<?> updateSupplier(Supplier supplier, Long id) {
         Optional<Supplier> supplierDB = this.supplier.findById(id);
-
+                
         if (supplierDB.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {
-            supplierDB.get().setName(supplier.getName());
-            supplierDB.get().setCountry((Country) country.getCountry(supplier.getCountry().getId()).getBody());
+            supplierDB.get().setName(supplier.getName());            
+            supplierDB.get().setCountry(supplier.getCountry());
             // Update the item list?
             return new ResponseEntity<>(supplierDB, HttpStatus.OK);
         }
