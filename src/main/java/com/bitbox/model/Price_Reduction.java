@@ -1,6 +1,5 @@
 package com.bitbox.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.sql.Date;
@@ -40,14 +39,12 @@ public class Price_Reduction implements Serializable {
     private Long id;
     
     @Basic(optional = true)
-    private String reduced_price;
-    
-    @Basic(optional = true)      
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date start_date;
+    private Double reduced_price;
     
     @Basic(optional = true)    
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date start_date;
+    
+    @Basic(optional = true)        
     private Date end_date;
     
     @ManyToMany(mappedBy = "price_reductions", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -76,14 +73,14 @@ public class Price_Reduction implements Serializable {
         this.id = id;
     }
 
-    public String getReduced_price() {
+    public Double getReduced_price() {
         return reduced_price;
     }
 
-    public void setReduced_price(String reduced_price) {
+    public void setReduced_price(Double reduced_price) {
         this.reduced_price = reduced_price;
     }
-    
+
     public Date getStart_date() {
         return start_date;
     }
@@ -98,7 +95,7 @@ public class Price_Reduction implements Serializable {
 
     public void setEnd_date(Date end_date) {
         this.end_date = end_date;
-    }    
+    }
 
     @Override
     public int hashCode() {

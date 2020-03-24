@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
  */
 public interface Price_ReductionService {
     
+    public ResponseEntity<?> getPriceReductions();
+    
+    public ResponseEntity<?> getPriceReduction(Long id);
+        
     public ResponseEntity<?> savePriceReduction(Price_Reduction price_reduction);
     
 }

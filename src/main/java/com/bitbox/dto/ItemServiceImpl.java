@@ -5,11 +5,7 @@ import com.bitbox.enums.Item_State;
 import com.bitbox.model.Item;
 import com.bitbox.model.Price_Reduction;
 import com.bitbox.model.Supplier;
-import com.bitbox.model.User;
 import com.bitbox.service.ItemService;
-import com.bitbox.service.Price_ReductionService;
-import com.bitbox.service.SupplierService;
-import com.bitbox.service.UserService;
 import java.sql.Date;
 import java.time.LocalDate;
 
@@ -33,15 +29,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private DAOItem item;
-
-    @Autowired
-    private SupplierService supplierService;
-
-    @Autowired
-    private Price_ReductionService price_reduction;
-
-    @Autowired
-    private UserService userService;
 
     @Override
     @Transactional(readOnly = true)
@@ -89,36 +76,33 @@ public class ItemServiceImpl implements ItemService {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {
             itemDB.get().setDescription(item.getDescription());
-            itemDB.get().setPrice(item.getPrice());            
-            
+            itemDB.get().setPrice(item.getPrice());
+
             if (isDiscontinued(item.getItem_state().toString())) {
                 itemDB.get().setItem_state(item.getItem_state());
                 itemDB.get().setReason(item.getReason());
+                itemDB.get().setUser_deactivation(item.getUser_deactivation());
+            } else {
+                itemDB.get().setItem_state(item.getItem_state());
             }
-            
-            // Check the price reduction list (just one price reduction) in the request. After, check if the price reduction exists on
-            // the price reductions database list.
-            
-            if(!item.getPrice_reductions().isEmpty()) {
-                for(int i = 0; i < itemDB.get().getPrice_reductions().size(); i++) {
-                    if( !existPriceReduction( itemDB.get().getPrice_reductions(), item.getPrice_reductions().get(0).getId() ) ) {
-                        
+
+            if (!item.getPrice_reductions().isEmpty()) {                
+                for (int i = 0; i < item.getPrice_reductions().size(); i++) {
+                    Price_Reduction price_reduction = item.getPrice_reductions().get(i);
+                    if (!existPriceReduction(itemDB.get().getPrice_reductions(), price_reduction.getId())) {                        
+                        System.out.println(item.getPrice_reductions().get(i));
+                        itemDB.get().addPriceReduction(item.getPrice_reductions().get(i));
                     }
                 }
             }
-            
 
-            // Check the suppliers list in the request. After, check if the supplier exists on the suppliers database list
-            // for avoid duplications insertions. In other case, add the supplier request to the suppliers database list.
             if (!item.getSuppliers().isEmpty()) {
-                
                 for (int i = 0; i < item.getSuppliers().size(); i++) {
                     Supplier supplier = item.getSuppliers().get(i);
                     if (!existSupplier(itemDB.get().getSuppliers(), supplier.getId())) {
-                        itemDB.get().addSupplier((Supplier) supplierService.getSupplier(item.getSuppliers().get(i).getId()).getBody());
+                        itemDB.get().addSupplier(item.getSuppliers().get(i));
                     }
                 }
-                
             }
             return new ResponseEntity<>(this.item.save(itemDB.get()), HttpStatus.OK);
         }
@@ -138,15 +122,17 @@ public class ItemServiceImpl implements ItemService {
 
     // Check if the supplier exist on the list for avoid duplications
     // insertions. In other case, add to the list.
-    private boolean existSupplier(List<Supplier> supplier, Long id) {
-        if (supplier.stream().anyMatch((s) -> (Objects.equals(s.getId(), id)))) {
+    private boolean existSupplier(List<Supplier> suppliers, Long id) {
+        if (suppliers.stream().anyMatch((s) -> (Objects.equals(s.getId(), id)))) {
             return true;
         }
         return false;
     }
-    
-    private boolean existPriceReduction(List<Price_Reduction> price_reduction, Long id) {
-        if(price_reduction.stream().anyMatch( (p) -> (Objects.equals(p.getId(), id)))) {
+
+    // Check if the price reduction exist on the list for avoid duplications
+    // insertions. In other case, add to the list.
+    private boolean existPriceReduction(List<Price_Reduction> price_reductions, Long id) {
+        if (price_reductions.stream().anyMatch((p) -> (Objects.equals(p.getId(), id)))) {
             return true;
         }
         return false;
@@ -161,5 +147,5 @@ public class ItemServiceImpl implements ItemService {
             return false;
         }
     }
-       
+
 }

@@ -67,6 +67,12 @@ public class Item implements Serializable {
     @Column(name = "reason_deactivation")
     private String reason;
     
+    @JoinColumn(name = "user_deactivation", referencedColumnName = "ID")
+    @Basic(optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private User user_deactivation;
+    
     @JoinTable(name = "REL_ITEM_SUPPLIER",
             joinColumns = @JoinColumn(name = "FK_item_code", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "FK_supplier", nullable = false))
@@ -82,7 +88,7 @@ public class Item implements Serializable {
     private List<Price_Reduction> price_reductions;
     
     @Basic(optional = true)
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date creation_date;
     
     @JoinColumn(name = "creator", referencedColumnName = "ID")
@@ -145,7 +151,15 @@ public class Item implements Serializable {
     public void setReason(String reason) {
         this.reason = reason;
     }
-    
+
+    public User getUser_deactivation() {
+        return user_deactivation;
+    }
+
+    public void setUser_deactivation(User user_deactivation) {
+        this.user_deactivation = user_deactivation;
+    }
+   
     public List<Supplier> getSuppliers() {
         return suppliers;
     }
@@ -167,6 +181,7 @@ public class Item implements Serializable {
         if(this.price_reductions == null) {
             this.price_reductions = new ArrayList<>();
         }
+        this.price_reductions.add(price_Reduction);
     }
 
     public Date getCreation_date() {
@@ -212,7 +227,7 @@ public class Item implements Serializable {
 
     @Override
     public String toString() {
-        return "Item{" + "item_code=" + item_code + ", description=" + description + ", price=" + price + ", item_state=" + item_state + ", reason=" + reason + ", suppliers=" + suppliers + ", price_reductions=" + price_reductions + ", creation_date=" + creation_date + ", creator=" + creator + '}';
+        return "Item{" + "item_code=" + item_code + ", description=" + description + ", price=" + price + ", item_state=" + item_state + ", reason=" + reason + ", user_deactivation=" + user_deactivation + ", suppliers=" + suppliers + ", price_reductions=" + price_reductions + ", creation_date=" + creation_date + ", creator=" + creator + '}';
     }
 
 }

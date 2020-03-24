@@ -1,7 +1,8 @@
 package com.bitbox.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "SUPPLIERS")
+@JsonPropertyOrder(value = {"id", "name", "country"})
 public class Supplier implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -54,6 +56,7 @@ public class Supplier implements Serializable {
     
     @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private List<Item> items;
         
     // Constructors

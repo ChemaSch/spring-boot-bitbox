@@ -1,9 +1,7 @@
 package com.bitbox.dto;
 
 import com.bitbox.dao.DAOSupplier;
-import com.bitbox.model.Country;
 import com.bitbox.model.Supplier;
-import com.bitbox.service.CountryService;
 import com.bitbox.service.SupplierService;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SupplierServiceImpl implements SupplierService {
 
     @Autowired
-    private DAOSupplier supplier;
-
-    @Autowired
-    private CountryService country;
+    private DAOSupplier supplier;    
 
     @Override
     @Transactional(readOnly = true)
@@ -67,7 +62,7 @@ public class SupplierServiceImpl implements SupplierService {
         } else {
             supplierDB.get().setName(supplier.getName());            
             supplierDB.get().setCountry(supplier.getCountry());
-            // Update the item list?
+            
             return new ResponseEntity<>(supplierDB, HttpStatus.OK);
         }
     }
